@@ -254,15 +254,15 @@
           </div>
         </div>
 
-        <!-- Module Selector Sub-Tabs -->
+        <!-- Module Selector Sub-Tabs (Directly Mapped to Extension Files) -->
         <div class="flex space-x-2 mb-6 border-b border-slate-200 pb-2 overflow-x-auto text-xs font-medium">
-          <button onclick="selectModule('motherEntry')" id="modBtn-motherEntry" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white">Mother Entry</button>
-          <button onclick="selectModule('motherUpdate')" id="modBtn-motherUpdate" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Mother Update</button>
-          <button onclick="selectModule('childEntry')" id="modBtn-childEntry" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Child Entry</button>
-          <button onclick="selectModule('childUpdate')" id="modBtn-childUpdate" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Child Update</button>
-          <button onclick="selectModule('location')" id="modBtn-location" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Set Location</button>
-          <button onclick="selectModule('ashaSearch')" id="modBtn-ashaSearch" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Asha / ANM Search</button>
-          <button onclick="selectModule('global')" id="modBtn-global" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Global Titles</button>
+          <button onclick="selectModule('motherEntry')" id="modBtn-motherEntry" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white">Mother Entry (page.js)</button>
+          <button onclick="selectModule('motherUpdate')" id="modBtn-motherUpdate" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Mother Update (motherUp.js)</button>
+          <button onclick="selectModule('childEntry')" id="modBtn-childEntry" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Child Entry (child.js)</button>
+          <button onclick="selectModule('childUpdate')" id="modBtn-childUpdate" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Child Update (childUp.js)</button>
+          <button onclick="selectModule('location')" id="modBtn-location" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Set Location (SetLocation.js)</button>
+          <button onclick="selectModule('ashaSearch')" id="modBtn-ashaSearch" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Asha / ANM (collectAsha.js)</button>
+          <button onclick="selectModule('global')" id="modBtn-global" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Global Titles (common)</button>
         </div>
 
         <div id="selectorFieldsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -705,12 +705,35 @@
       const modData = allSelectors[currentModule] || {};
       const keys = Object.keys(modData);
 
+      const fileMapping = {
+        motherEntry: '📄 Mapped File: page.js (Mother Registration Form)',
+        motherUpdate: '📄 Mapped File: motherUp.js (Mother ANC / Delivery Update)',
+        childEntry: '📄 Mapped File: child.js (Child Registration Form)',
+        childUpdate: '📄 Mapped File: childUp.js (Child Immunization Update)',
+        location: '📄 Mapped File: SetLocation.js (PHC, SubCenter & Village Auto-Selector)',
+        ashaSearch: '📄 Mapped File: collectAsha.js (Asha / ANM Scraper)',
+        global: '📄 Mapped File: common_function.js (Hierarchy & Page Titles)',
+      };
+
+      const fileInfo = fileMapping[currentModule] || '';
+
       if (keys.length === 0) {
-        container.innerHTML = '<div class="col-span-2 p-6 text-center text-slate-400 bg-slate-50 rounded-xl border">No selectors defined for this module yet. Click "Add Custom Field/Element" below.</div>';
+        container.innerHTML = `
+          <div class="col-span-2 mb-2 p-2.5 bg-blue-50 text-blue-800 rounded-lg text-xs font-semibold flex items-center">
+            <i class="fa-solid fa-file-code mr-2"></i> ${fileInfo}
+          </div>
+          <div class="col-span-2 p-6 text-center text-slate-400 bg-slate-50 rounded-xl border">No selectors defined for this module yet. Click "Add Custom Field/Element" below.</div>`;
         return;
       }
 
-      container.innerHTML = keys.map(k => `
+      const headerHtml = `
+        <div class="col-span-1 md:col-span-2 p-2.5 bg-blue-50 border border-blue-200 text-blue-900 rounded-lg text-xs font-semibold flex items-center justify-between">
+          <span><i class="fa-solid fa-file-code mr-1.5 text-blue-600"></i> ${fileInfo}</span>
+          <span class="text-blue-700 bg-white px-2 py-0.5 rounded text-xs border border-blue-200 font-mono">${keys.length} elements</span>
+        </div>
+      `;
+
+      container.innerHTML = headerHtml + keys.map(k => `
         <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
           <div class="flex justify-between items-center mb-1">
             <label class="text-xs font-semibold text-slate-700 font-mono">${k}</label>

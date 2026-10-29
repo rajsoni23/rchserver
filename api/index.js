@@ -41,19 +41,34 @@ async function initializeDatabase() {
     const conn = await connectDB();
     if (!conn) return;
 
-    // 1. Seed dynamic selectors if missing
+    // 1. Seed dynamic selectors if missing and update titles
+    const moduleMeta = {
+      motherEntry: 'Mother Registration (page.js)',
+      motherUpdate: 'Mother Update (motherUp.js)',
+      childEntry: 'Child Registration (child.js)',
+      childUpdate: 'Child Update (childUp.js)',
+      location: 'Set Location (SetLocation.js)',
+      ashaSearch: 'Collect Asha (collectAsha.js)',
+      global: 'Global Headers (common_function.js)',
+    };
+
     const configCount = await PortalConfig.countDocuments();
     if (configCount === 0) {
       console.log('🌱 Seeding initial RCH portal selectors into MongoDB...');
       for (const [moduleName, map] of Object.entries(defaultSelectors)) {
         await PortalConfig.create({
           moduleName,
-          title: moduleName.toUpperCase(),
+          title: moduleMeta[moduleName] || moduleName.toUpperCase(),
           selectors: map,
           version: 1,
         });
       }
       console.log('✅ Default selectors seeded successfully.');
+    } else {
+      // Keep titles mapped to exact files
+      for (const [moduleName, title] of Object.entries(moduleMeta)) {
+        await PortalConfig.updateOne({ moduleName }, { $set: { title } });
+      }
     }
 
     // 2. Seed system settings if missing

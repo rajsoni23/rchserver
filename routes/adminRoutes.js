@@ -255,12 +255,14 @@ router.get('/selectors', authAdmin, async (req, res) => {
   try {
     const configs = await PortalConfig.find({});
     const tree = {};
+    const titles = {};
 
     configs.forEach((cfg) => {
       tree[cfg.moduleName] = Object.fromEntries(cfg.selectors || new Map());
+      titles[cfg.moduleName] = cfg.title || cfg.moduleName;
     });
 
-    return res.json({ success: true, selectors: tree });
+    return res.json({ success: true, selectors: tree, titles });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
   }
