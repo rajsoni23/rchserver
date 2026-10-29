@@ -1,5 +1,5 @@
 /**
- * 🛡️ Default Dynamic Selectors for Shree RCH Portal Elements
+ * 🛡️ Default Dynamic Selectors for RCH Manager Portal Elements
  * Automatically seeded into MongoDB and editable on the web Admin Panel (/admin).
  * Mapped directly to the extension automation files.
  */

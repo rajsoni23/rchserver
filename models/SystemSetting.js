@@ -13,7 +13,7 @@ const SystemSettingSchema = new mongoose.Schema({
   },
   upiId: {
     type: String,
-    default: 'shree.rch@upi',
+    default: 'rch.manager@upi',
   },
   qrCodeUrl: {
     type: String,
@@ -21,7 +21,7 @@ const SystemSettingSchema = new mongoose.Schema({
   },
   announcement: {
     type: String,
-    default: 'Welcome to Shree RCH! System operational and updated.',
+    default: 'Welcome to RCH Manager! System operational and updated.',
   },
   minExtensionVersion: {
     type: String,

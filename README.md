@@ -1,6 +1,6 @@
-# 🛡️ Shree RCH Central Cloud Server & Dynamic OTA Engine
+# 🛡️ RCH Manager Central Cloud Server & Dynamic OTA Engine
 
-A high-performance, secure backend server for the **Shree RCH** Chrome Extension. Built for deployment on **Vercel** with **MongoDB Atlas**.
+A high-performance, secure backend server for the **RCH Manager** Chrome Extension. Built for deployment on **Vercel** with **MongoDB Atlas**.
 
 ---
 

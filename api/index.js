@@ -77,8 +77,8 @@ async function initializeDatabase() {
       await SystemSetting.create({
         key: 'default_settings',
         price: 499,
-        upiId: process.env.DEFAULT_UPI_ID || 'shree.rch@upi',
-        announcement: 'Welcome to Shree RCH! System operational and updated.',
+        upiId: process.env.DEFAULT_UPI_ID || 'rch.manager@upi',
+        announcement: 'Welcome to RCH Manager! System operational and updated.',
       });
       console.log('✅ Default system settings seeded.');
     }
@@ -122,7 +122,7 @@ app.use('/api/admin', adminRoutes);
 app.get(['/api/health', '/health'], (req, res) => {
   res.json({
     status: 'online',
-    system: 'Shree RCH Central Engine',
+    system: 'RCH Manager Central Engine',
     timestamp: new Date().toISOString(),
   });
 });

@@ -322,9 +322,9 @@ router.get('/settings', authAdmin, async (req, res) => {
   try {
     const setting = await SystemSetting.findOne({ key: 'default_settings' }) || {
       price: 499,
-      upiId: 'shree.rch@upi',
+      upiId: 'rch.manager@upi',
       qrCodeUrl: '',
-      announcement: 'Welcome to Shree RCH!',
+      announcement: 'Welcome to RCH Manager!',
       minExtensionVersion: '0.0.1',
       maintenanceMode: false
     };

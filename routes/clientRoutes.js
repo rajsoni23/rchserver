@@ -67,8 +67,8 @@ router.post('/handshake', async (req, res) => {
     // Get system settings
     const setting = await SystemSetting.findOne({ key: 'default_settings' }) || {
       price: 499,
-      upiId: 'shree.rch@upi',
-      announcement: 'Welcome to Shree RCH',
+      upiId: 'rch.manager@upi',
+      announcement: 'Welcome to RCH Manager',
       maintenanceMode: false
     };
 
@@ -134,7 +134,7 @@ router.get('/selectors', authUser, async (req, res) => {
       return res.status(403).json({
         success: false,
         error: req.userIsExpired
-          ? 'Your Shree RCH subscription has expired. Please recharge to resume automation.'
+          ? 'Your RCH Manager subscription has expired. Please recharge to resume automation.'
           : 'Your account is currently inactive. Please contact admin or verify payment.',
         selectors: null,
       });
@@ -201,7 +201,7 @@ router.get('/payment/info', async (req, res) => {
   try {
     const setting = await SystemSetting.findOne({ key: 'default_settings' }) || {
       price: 499,
-      upiId: 'shree.rch@upi',
+      upiId: 'rch.manager@upi',
       qrCodeUrl: '',
     };
 

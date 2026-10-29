@@ -1,7 +1,7 @@
 {
   "name": "rch-server",
   "version": "1.0.0",
-  "description": "Shree RCH Central Cloud Server & Dynamic OTA Selector Management Engine",
+  "description": "RCH Manager Central Cloud Server & Dynamic OTA Selector Management Engine",
   "main": "api/index.js",
   "scripts": {
     "start": "node server.js",
@@ -18,6 +18,6 @@
   "engines": {
     "node": ">=18.x"
   },
-  "author": "Shree RCH Developer",
+  "author": "RCH Manager Developer",
   "license": "ISC"
 }
