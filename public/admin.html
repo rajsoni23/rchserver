@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shree RCH - Central Admin & OTA Engine</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .gradient-header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    }
+    .active-tab {
+      border-bottom: 3px solid #2563eb;
+      color: #1d4ed8;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
+
+  <!-- ================= LOGIN SCREEN ================= -->
+  <div id="loginSection" class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border border-slate-100">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-500/30 mb-3">
+          <i class="fa-solid fa-shield-halved text-2xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-800">Shree RCH Central Server</h2>
+        <p class="text-sm text-slate-500 mt-1">Admin Panel & Dynamic OTA Element Engine</p>
+      </div>
+
+      <div id="loginError" class="hidden mb-4 p-3 bg-red-50 text-red-700 text-sm rounded-lg border border-red-200"></div>
+
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Admin Username</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+              <i class="fa-solid fa-user"></i>
+            </span>
+            <input type="text" id="adminUser" required placeholder="admin"
+              class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Admin Password</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+              <i class="fa-solid fa-lock"></i>
+            </span>
+            <input type="password" id="adminPass" required placeholder="••••••••"
+              class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+          </div>
+        </div>
+
+        <button type="submit" id="loginBtn"
+          class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md shadow-blue-600/30 transition flex items-center justify-center space-x-2">
+          <span>Sign In to Dashboard</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= DASHBOARD APP ================= -->
+  <div id="appSection" class="hidden flex-1 flex flex-col">
+    <!-- Navbar -->
+    <header class="gradient-header text-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white backdrop-blur">
+            <i class="fa-solid fa-hospital-user text-lg"></i>
+          </div>
+          <div>
+            <h1 class="font-bold text-lg leading-tight">Shree RCH Manager</h1>
+            <p class="text-xs text-blue-100">Dynamic OTA Selector Engine & Licensing</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <span class="text-xs bg-white/15 px-3 py-1.5 rounded-full flex items-center space-x-2 border border-white/20">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="adminNameDisplay">admin</span>
+          </span>
+          <button id="logoutBtn" class="text-xs bg-red-500/80 hover:bg-red-600 px-3 py-1.5 rounded-lg transition flex items-center space-x-1">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1">
+      
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium">Total Users</p>
+            <h3 id="statTotalUsers" class="text-2xl font-bold text-slate-800">0</h3>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-user-check"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium">Active Licenses</p>
+            <h3 id="statActiveUsers" class="text-2xl font-bold text-slate-800">0</h3>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium">Expired Licenses</p>
+            <h3 id="statExpiredUsers" class="text-2xl font-bold text-slate-800">0</h3>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-receipt"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium">Pending Payments</p>
+            <h3 id="statPendingPayments" class="text-2xl font-bold text-slate-800">0</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="bg-white rounded-t-xl border border-slate-200 border-b-0 px-4 pt-2 flex space-x-6 overflow-x-auto">
+        <button onclick="switchTab('usersTab')" id="tabBtn-usersTab" class="py-3 px-2 text-sm font-medium flex items-center space-x-2 active-tab">
+          <i class="fa-solid fa-users-gear"></i>
+          <span>Users & Licenses</span>
+        </button>
+        <button onclick="switchTab('paymentsTab')" id="tabBtn-paymentsTab" class="py-3 px-2 text-sm font-medium text-slate-500 hover:text-slate-800 flex items-center space-x-2">
+          <i class="fa-solid fa-money-check-dollar"></i>
+          <span>Payment Approvals</span>
+          <span id="pendingBadge" class="hidden ml-1 px-1.5 py-0.5 text-xs bg-red-500 text-white rounded-full">0</span>
+        </button>
+        <button onclick="switchTab('selectorsTab')" id="tabBtn-selectorsTab" class="py-3 px-2 text-sm font-medium text-slate-500 hover:text-slate-800 flex items-center space-x-2">
+          <i class="fa-solid fa-wand-magic-sparkles text-blue-600"></i>
+          <span>Dynamic Selectors (OTA)</span>
+        </button>
+        <button onclick="switchTab('settingsTab')" id="tabBtn-settingsTab" class="py-3 px-2 text-sm font-medium text-slate-500 hover:text-slate-800 flex items-center space-x-2">
+          <i class="fa-solid fa-sliders"></i>
+          <span>System Settings</span>
+        </button>
+      </div>
+
+      <!-- Tab 1: Users & Licenses -->
+      <div id="usersTab" class="tab-content bg-white rounded-b-xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div class="relative w-full sm:w-80">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+            <input type="text" id="userSearchInput" placeholder="Search Email, RCH ID, Mobile..."
+              class="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+          <button onclick="loadUsers()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg flex items-center space-x-2">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Refresh</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs uppercase tracking-wider">
+                <th class="p-3">User Email</th>
+                <th class="p-3">RCH ID</th>
+                <th class="p-3">Mobile</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">Expiry Date</th>
+                <th class="p-3">Device Lock</th>
+                <th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="userTableBody" class="divide-y divide-slate-100">
+              <tr><td colspan="7" class="p-4 text-center text-slate-400">Loading users...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: Payments Verification -->
+      <div id="paymentsTab" class="tab-content hidden bg-white rounded-b-xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h3 class="text-base font-bold text-slate-800">Payment & UTR Requests</h3>
+            <p class="text-xs text-slate-500">Approve user UTR submissions to automatically extend user licenses by 30 days.</p>
+          </div>
+          <button onclick="loadPayments()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg flex items-center space-x-2">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Refresh</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs uppercase tracking-wider">
+                <th class="p-3">User Email</th>
+                <th class="p-3">RCH ID</th>
+                <th class="p-3">Mobile</th>
+                <th class="p-3">UTR Reference</th>
+                <th class="p-3">Date Submitted</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Review</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsTableBody" class="divide-y divide-slate-100">
+              <tr><td colspan="7" class="p-4 text-center text-slate-400">Loading payments...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Dynamic Elements & Portal Selectors (OTA) -->
+      <div id="selectorsTab" class="tab-content hidden bg-white rounded-b-xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-slate-100">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2.5 py-1 bg-blue-100 text-blue-700 font-semibold text-xs rounded-full">OTA Remote Config</span>
+              <h3 class="text-base font-bold text-slate-800">RCH Portal Dynamic Element & Selector Engine</h3>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">
+              Whenever the government portal (<code class="bg-slate-100 px-1 py-0.5 rounded">rch.mohfw.gov.in</code>) changes any button, dropdown, or input ID, update it here.
+              All client extensions receive the update <strong>instantly without Chrome Web Store republishing!</strong>
+            </p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="resetFactorySelectors()" class="px-3.5 py-2 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg">
+              <i class="fa-solid fa-rotate-left mr-1"></i> Reset Factory
+            </button>
+            <button onclick="saveAllCurrentSelectors()" class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm shadow-blue-500/20 flex items-center space-x-1.5">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <span>Save & Publish OTA</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Module Selector Sub-Tabs -->
+        <div class="flex space-x-2 mb-6 border-b border-slate-200 pb-2 overflow-x-auto text-xs font-medium">
+          <button onclick="selectModule('motherEntry')" id="modBtn-motherEntry" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white">Mother Entry</button>
+          <button onclick="selectModule('motherUpdate')" id="modBtn-motherUpdate" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Mother Update</button>
+          <button onclick="selectModule('childEntry')" id="modBtn-childEntry" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Child Entry</button>
+          <button onclick="selectModule('childUpdate')" id="modBtn-childUpdate" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Child Update</button>
+          <button onclick="selectModule('location')" id="modBtn-location" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Set Location</button>
+          <button onclick="selectModule('ashaSearch')" id="modBtn-ashaSearch" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Asha / ANM Search</button>
+          <button onclick="selectModule('global')" id="modBtn-global" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Global Titles</button>
+        </div>
+
+        <div id="selectorFieldsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Dynamic field inputs populated by JS -->
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
+          <button onclick="addNewSelectorRow()" class="px-3 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg flex items-center space-x-1.5">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add Custom Field/Element</span>
+          </button>
+          <button onclick="saveAllCurrentSelectors()" class="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md shadow-blue-500/20 flex items-center space-x-2">
+            <i class="fa-solid fa-check"></i>
+            <span>Save & Apply Updates</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 4: System Settings -->
+      <div id="settingsTab" class="tab-content hidden bg-white rounded-b-xl border border-slate-200 p-6 shadow-sm">
+        <h3 class="text-base font-bold text-slate-800 mb-1">Central Settings & Pricing</h3>
+        <p class="text-xs text-slate-500 mb-6">Manage renewal fee, payment UPI, and extension notices.</p>
+
+        <form id="settingsForm" class="space-y-4 max-w-xl">
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Subscription Price (₹ INR / Month)</label>
+            <input type="number" id="settingPrice" required class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">UPI ID for Payment (VPA)</label>
+            <input type="text" id="settingUpiId" required placeholder="example@upi" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">UPI QR Code Image URL (Optional)</label>
+            <input type="text" id="settingQrUrl" placeholder="https://..." class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Global User Announcement Message</label>
+            <textarea id="settingAnnouncement" rows="2" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+          </div>
+
+          <div class="flex items-center space-x-3 pt-2">
+            <input type="checkbox" id="settingMaintenance" class="w-4 h-4 text-blue-600 rounded">
+            <label for="settingMaintenance" class="text-xs font-medium text-slate-700">Enable Maintenance Mode (Halts extension automation temporarily)</label>
+          </div>
+
+          <div class="pt-4">
+            <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg shadow-sm">
+              Save Settings
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- User Edit Modal -->
+  <div id="userModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
+      <h3 class="text-lg font-bold text-slate-800 mb-4" id="modalUserTitle">Edit User License</h3>
+      <form id="editUserForm" class="space-y-3">
+        <input type="hidden" id="editUserId">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Status</label>
+          <select id="editUserStatus" class="w-full px-3 py-2 text-sm border rounded-lg">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+            <option value="Blocked">Blocked</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">RCH ID</label>
+          <input type="text" id="editUserRchId" class="w-full px-3 py-2 text-sm border rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Mobile</label>
+          <input type="text" id="editUserMobile" class="w-full px-3 py-2 text-sm border rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">License Expiry Date</label>
+          <input type="datetime-local" id="editUserExpiry" class="w-full px-3 py-2 text-sm border rounded-lg">
+        </div>
+        <div class="pt-3 flex justify-end space-x-2">
+          <button type="button" onclick="closeUserModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">Cancel</button>
+          <button type="submit" class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-lg text-sm flex items-center space-x-2 hidden z-50 transition-all">
+    <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toastMsg">Action completed</span>
+  </div>
+
+  <!-- Frontend Logic -->
+  <script>
+    let token = localStorage.getItem('shree_rch_admin_token') || '';
+    let currentModule = 'motherEntry';
+    let allSelectors = {};
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastIcon = document.getElementById('toastIcon');
+      toastMsg.innerText = msg;
+      toastIcon.className = isError ? 'fa-solid fa-circle-xmark text-red-400' : 'fa-solid fa-circle-check text-emerald-400';
+      toast.classList.remove('hidden');
+      setTimeout(() => { toast.classList.add('hidden'); }, 3500);
+    }
+
+    // Check login
+    if (token) {
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('appSection').classList.remove('hidden');
+      initDashboard();
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const u = document.getElementById('adminUser').value;
+      const p = document.getElementById('adminPass').value;
+      const btn = document.getElementById('loginBtn');
+      const errBox = document.getElementById('loginError');
+
+      btn.disabled = true;
+      btn.innerText = 'Verifying...';
+      errBox.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: u, password: p }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          token = data.token;
+          localStorage.setItem('shree_rch_admin_token', token);
+          document.getElementById('adminNameDisplay').innerText = data.username;
+          document.getElementById('loginSection').classList.add('hidden');
+          document.getElementById('appSection').classList.remove('hidden');
+          initDashboard();
+        } else {
+          errBox.innerText = data.error || 'Login failed';
+          errBox.classList.remove('hidden');
+        }
+      } catch (err) {
+        errBox.innerText = 'Server unreachable. Check connection.';
+        errBox.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Sign In to Dashboard</span><i class="fa-solid fa-arrow-right text-xs"></i>';
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('shree_rch_admin_token');
+      location.reload();
+    });
+
+    function initDashboard() {
+      loadStats();
+      loadUsers();
+      loadPayments();
+      loadSelectors();
+      loadSettings();
+    }
+
+    async function authFetch(url, options = {}) {
+      options.headers = options.headers || {};
+      options.headers['Authorization'] = 'Bearer ' + token;
+      const res = await fetch(url, options);
+      if (res.status === 401) {
+        localStorage.removeItem('shree_rch_admin_token');
+        location.reload();
+      }
+      return res;
+    }
+
+    async function loadStats() {
+      try {
+        const res = await authFetch('/api/admin/stats');
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('statTotalUsers').innerText = data.stats.totalUsers;
+          document.getElementById('statActiveUsers').innerText = data.stats.activeUsers;
+          document.getElementById('statExpiredUsers').innerText = data.stats.expiredUsers;
+          document.getElementById('statPendingPayments').innerText = data.stats.pendingPayments;
+
+          const badge = document.getElementById('pendingBadge');
+          if (data.stats.pendingPayments > 0) {
+            badge.innerText = data.stats.pendingPayments;
+            badge.classList.remove('hidden');
+          } else {
+            badge.classList.add('hidden');
+          }
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    // --- Users ---
+    async function loadUsers() {
+      const search = document.getElementById('userSearchInput').value;
+      const tbody = document.getElementById('userTableBody');
+      try {
+        const res = await authFetch(`/api/admin/users?search=${encodeURIComponent(search)}`);
+        const data = await res.json();
+        if (data.success) {
+          if (data.users.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">No users found.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = data.users.map(u => {
+            const isExp = new Date() > new Date(u.expiryDate);
+            const statusBadge = u.status === 'Active' && !isExp
+              ? '<span class="px-2 py-0.5 text-xs bg-emerald-100 text-emerald-800 rounded-full font-medium">Active</span>'
+              : '<span class="px-2 py-0.5 text-xs bg-red-100 text-red-800 rounded-full font-medium">' + (isExp ? 'Expired' : u.status) + '</span>';
+
+            const expDateFormatted = u.expiryDate ? new Date(u.expiryDate).toLocaleDateString() : 'N/A';
+            const deviceBadge = u.deviceId
+              ? `<span title="${u.deviceId}" class="text-xs text-slate-500 font-mono bg-slate-100 px-1.5 py-0.5 rounded">Locked (${u.deviceId.slice(-4)})</span>`
+              : '<span class="text-xs text-emerald-600">Free / Unlocked</span>';
+
+            return `
+              <tr class="hover:bg-slate-50/80">
+                <td class="p-3 font-medium text-slate-800">${u.email}</td>
+                <td class="p-3 text-slate-600">${u.rchId || '-'}</td>
+                <td class="p-3 text-slate-600">${u.mobile || '-'}</td>
+                <td class="p-3">${statusBadge}</td>
+                <td class="p-3 text-slate-600 text-xs">${expDateFormatted}</td>
+                <td class="p-3">${deviceBadge}</td>
+                <td class="p-3 text-right space-x-1">
+                  <button onclick="quickExtend('${u._id}', 30)" class="px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded text-xs" title="Add 30 Days">+30D</button>
+                  <button onclick="toggleUserStatus('${u._id}', '${u.status}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-xs" title="Toggle Active/Inactive">
+                    <i class="fa-solid fa-power-off ${u.status === 'Active' ? 'text-emerald-600' : 'text-slate-400'}"></i>
+                  </button>
+                  <button onclick="resetDevice('${u._id}')" class="px-2 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded text-xs" title="Reset Device Lock">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                  </button>
+                  <button onclick="openEditUser('${u._id}', '${u.email}', '${u.status}', '${u.rchId || ''}', '${u.mobile || ''}', '${u.expiryDate}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-xs">
+                    <i class="fa-solid fa-pen text-slate-600"></i>
+                  </button>
+                  <button onclick="deleteUser('${u._id}')" class="px-2 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded text-xs">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    document.getElementById('userSearchInput').addEventListener('input', () => { loadUsers(); });
+
+    async function quickExtend(id, days) {
+      const res = await authFetch(`/api/admin/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ addDays: days, status: 'Active' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`User license extended by ${days} days!`);
+        loadUsers();
+        loadStats();
+      }
+    }
+
+    async function toggleUserStatus(id, current) {
+      const newStatus = current === 'Active' ? 'Inactive' : 'Active';
+      const res = await authFetch(`/api/admin/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`Status changed to ${newStatus}`);
+        loadUsers();
+        loadStats();
+      }
+    }
+
+    async function resetDevice(id) {
+      if (!confirm('Reset device lock for this user? They will be able to bind to a new device on next login.')) return;
+      const res = await authFetch(`/api/admin/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resetDevice: true })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('Device lock reset successfully.');
+        loadUsers();
+      }
+    }
+
+    async function deleteUser(id) {
+      if (!confirm('Are you sure you want to delete this user?')) return;
+      const res = await authFetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        showToast('User deleted.');
+        loadUsers();
+        loadStats();
+      }
+    }
+
+    function openEditUser(id, email, status, rchId, mobile, expiryDate) {
+      document.getElementById('modalUserTitle').innerText = 'Edit User: ' + email;
+      document.getElementById('editUserId').value = id;
+      document.getElementById('editUserStatus').value = status;
+      document.getElementById('editUserRchId').value = rchId;
+      document.getElementById('editUserMobile').value = mobile;
+      if (expiryDate) {
+        const dt = new Date(expiryDate);
+        document.getElementById('editUserExpiry').value = dt.toISOString().slice(0, 16);
+      }
+      document.getElementById('userModal').classList.remove('hidden');
+    }
+
+    function closeUserModal() {
+      document.getElementById('userModal').classList.add('hidden');
+    }
+
+    document.getElementById('editUserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editUserId').value;
+      const status = document.getElementById('editUserStatus').value;
+      const rchId = document.getElementById('editUserRchId').value;
+      const mobile = document.getElementById('editUserMobile').value;
+      const expiry = document.getElementById('editUserExpiry').value;
+
+      const res = await authFetch(`/api/admin/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status, rchId, mobile, expiryDate: expiry ? new Date(expiry).toISOString() : undefined })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('User updated successfully.');
+        closeUserModal();
+        loadUsers();
+        loadStats();
+      }
+    });
+
+    // --- Payments ---
+    async function loadPayments() {
+      const tbody = document.getElementById('paymentsTableBody');
+      try {
+        const res = await authFetch('/api/admin/payments');
+        const data = await res.json();
+        if (data.success) {
+          if (data.payments.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">No payment verification requests.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = data.payments.map(p => {
+            const statusClass = p.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : (p.status === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800');
+            const isPending = p.status === 'Pending';
+            return `
+              <tr class="hover:bg-slate-50/80">
+                <td class="p-3 font-medium text-slate-800">${p.email}</td>
+                <td class="p-3 text-slate-600">${p.rchId || '-'}</td>
+                <td class="p-3 text-slate-600">${p.mobile || '-'}</td>
+                <td class="p-3 font-mono font-bold text-slate-800">${p.utr}</td>
+                <td class="p-3 text-xs text-slate-500">${new Date(p.createdAt).toLocaleString()}</td>
+                <td class="p-3"><span class="px-2 py-0.5 text-xs rounded-full font-medium ${statusClass}">${p.status}</span></td>
+                <td class="p-3 text-right space-x-1">
+                  ${isPending ? `
+                    <button onclick="approvePayment('${p._id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-semibold">Approve (+30D)</button>
+                    <button onclick="rejectPayment('${p._id}')" class="px-2 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-xs">Reject</button>
+                  ` : '<span class="text-xs text-slate-400">Reviewed</span>'}
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function approvePayment(id) {
+      if (!confirm('Approve this payment? The user account will be activated and extended 30 days.')) return;
+      const res = await authFetch(`/api/admin/payments/${id}/approve`, { method: 'PUT' });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message);
+        loadPayments();
+        loadStats();
+        loadUsers();
+      }
+    }
+
+    async function rejectPayment(id) {
+      const res = await authFetch(`/api/admin/payments/${id}/reject`, { method: 'PUT' });
+      const data = await res.json();
+      if (data.success) {
+        showToast('Payment rejected');
+        loadPayments();
+      }
+    }
+
+    // --- Dynamic OTA Selectors ---
+    async function loadSelectors() {
+      try {
+        const res = await authFetch('/api/admin/selectors');
+        const data = await res.json();
+        if (data.success) {
+          allSelectors = data.selectors;
+          renderModuleSelectors();
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function selectModule(mod) {
+      currentModule = mod;
+      ['motherEntry', 'motherUpdate', 'childEntry', 'childUpdate', 'location', 'ashaSearch', 'global'].forEach(m => {
+        const btn = document.getElementById('modBtn-' + m);
+        if (btn) {
+          if (m === mod) {
+            btn.className = 'px-3 py-1.5 rounded-lg bg-blue-600 text-white';
+          } else {
+            btn.className = 'px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200';
+          }
+        }
+      });
+      renderModuleSelectors();
+    }
+
+    function renderModuleSelectors() {
+      const container = document.getElementById('selectorFieldsContainer');
+      const modData = allSelectors[currentModule] || {};
+      const keys = Object.keys(modData);
+
+      if (keys.length === 0) {
+        container.innerHTML = '<div class="col-span-2 p-6 text-center text-slate-400 bg-slate-50 rounded-xl border">No selectors defined for this module yet. Click "Add Custom Field/Element" below.</div>';
+        return;
+      }
+
+      container.innerHTML = keys.map(k => `
+        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div class="flex justify-between items-center mb-1">
+            <label class="text-xs font-semibold text-slate-700 font-mono">${k}</label>
+            <button onclick="removeSelectorField('${k}')" class="text-red-400 hover:text-red-600 text-xs" title="Remove Field">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <input type="text" data-module="${currentModule}" data-key="${k}" value="${modData[k]}"
+            class="w-full px-3 py-1.5 text-xs font-mono text-slate-800 bg-white border border-slate-300 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none">
+        </div>
+      `).join('');
+    }
+
+    function addNewSelectorRow() {
+      const keyName = prompt('Enter identifier name (e.g. txtAadhaarNumber or btnSubmit):');
+      if (!keyName) return;
+      const cleanKey = keyName.trim();
+      allSelectors[currentModule] = allSelectors[currentModule] || {};
+      allSelectors[currentModule][cleanKey] = '';
+      renderModuleSelectors();
+    }
+
+    function removeSelectorField(key) {
+      if (confirm(`Remove selector key '${key}'?`)) {
+        delete allSelectors[currentModule][key];
+        renderModuleSelectors();
+      }
+    }
+
+    async function saveAllCurrentSelectors() {
+      // Collect current input values
+      const inputs = document.querySelectorAll(`input[data-module="${currentModule}"]`);
+      const map = {};
+      inputs.forEach(inp => {
+        map[inp.dataset.key] = inp.value.trim();
+      });
+      allSelectors[currentModule] = map;
+
+      try {
+        const res = await authFetch('/api/admin/selectors', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ moduleName: currentModule, selectors: map })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message);
+        } else {
+          showToast(data.error || 'Failed to update selectors', true);
+        }
+      } catch (e) {
+        showToast('Error saving selectors', true);
+      }
+    }
+
+    async function resetFactorySelectors() {
+      if (!confirm('Reset all portal selectors to factory defaults? Any custom IDs will be overwritten.')) return;
+      try {
+        const res = await authFetch('/api/admin/selectors/reset-defaults', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Selectors reset to factory defaults.');
+          loadSelectors();
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    // --- Settings ---
+    async function loadSettings() {
+      try {
+        const res = await authFetch('/api/admin/settings');
+        const data = await res.json();
+        if (data.success && data.setting) {
+          document.getElementById('settingPrice').value = data.setting.price;
+          document.getElementById('settingUpiId').value = data.setting.upiId;
+          document.getElementById('settingQrUrl').value = data.setting.qrCodeUrl || '';
+          document.getElementById('settingAnnouncement').value = data.setting.announcement || '';
+          document.getElementById('settingMaintenance').checked = !!data.setting.maintenanceMode;
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        price: document.getElementById('settingPrice').value,
+        upiId: document.getElementById('settingUpiId').value,
+        qrCodeUrl: document.getElementById('settingQrUrl').value,
+        announcement: document.getElementById('settingAnnouncement').value,
+        maintenanceMode: document.getElementById('settingMaintenance').checked,
+      };
+
+      const res = await authFetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('System settings saved successfully!');
+      }
+    });
+
+    // --- Tab Switcher ---
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(tabId).classList.remove('hidden');
+
+      ['usersTab', 'paymentsTab', 'selectorsTab', 'settingsTab'].forEach(t => {
+        const btn = document.getElementById('tabBtn-' + t);
+        if (t === tabId) {
+          btn.className = 'py-3 px-2 text-sm font-medium flex items-center space-x-2 active-tab';
+        } else {
+          btn.className = 'py-3 px-2 text-sm font-medium text-slate-500 hover:text-slate-800 flex items-center space-x-2';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
