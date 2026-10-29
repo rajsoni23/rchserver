@@ -365,7 +365,7 @@
 
   <!-- Frontend Logic -->
   <script>
-    let token = localStorage.getItem('shree_rch_admin_token') || '';
+    let token = localStorage.getItem('rch_manager_admin_token') || '';
     let currentModule = 'motherEntry';
     let allSelectors = {};
 
@@ -406,7 +406,7 @@
         const data = await res.json();
         if (data.success) {
           token = data.token;
-          localStorage.setItem('shree_rch_admin_token', token);
+          localStorage.setItem('rch_manager_admin_token', token);
           document.getElementById('adminNameDisplay').innerText = data.username;
           document.getElementById('loginSection').classList.add('hidden');
           document.getElementById('appSection').classList.remove('hidden');
@@ -425,7 +425,7 @@
     });
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem('shree_rch_admin_token');
+      localStorage.removeItem('rch_manager_admin_token');
       location.reload();
     });
 
@@ -442,7 +442,7 @@
       options.headers['Authorization'] = 'Bearer ' + token;
       const res = await fetch(url, options);
       if (res.status === 401) {
-        localStorage.removeItem('shree_rch_admin_token');
+        localStorage.removeItem('rch_manager_admin_token');
         location.reload();
       }
       return res;

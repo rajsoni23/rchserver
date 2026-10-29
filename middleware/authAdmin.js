@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'shree-rch-super-secret-jwt-key-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'rch-manager-super-secret-jwt-key-2026';
 
 async function authAdmin(req, res, next) {
   try {

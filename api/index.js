@@ -87,7 +87,7 @@ async function initializeDatabase() {
     const adminCount = await Admin.countDocuments();
     if (adminCount === 0) {
       const defaultUser = (process.env.ADMIN_USERNAME || 'admin').toLowerCase().trim();
-      const defaultPass = process.env.ADMIN_PASSWORD || 'shreeAdmin2026';
+      const defaultPass = process.env.ADMIN_PASSWORD || 'admin1234';
       const hash = await bcrypt.hash(defaultPass, 10);
       await Admin.create({
         username: defaultUser,

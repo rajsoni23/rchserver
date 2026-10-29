@@ -29,11 +29,11 @@ A high-performance, secure backend server for the **RCH Manager** Chrome Extensi
 ### Step 1: Create Free MongoDB Database (MongoDB Atlas)
 1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and sign in.
 2. Create a **Free Shared Cluster (M0)**.
-3. In **Database Access**, create a database user (e.g., `shreeadmin`) with a password.
+3. In **Database Access**, create a database user (e.g., `rchadmin`) with a password.
 4. In **Network Access**, add IP `0.0.0.0/0` (Allow access from anywhere, required for Vercel Serverless).
 5. In **Database** -> **Connect** -> **Connect your application** (Drivers), copy the connection string:
    ```text
-   mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/shree_rch?retryWrites=true&w=majority
+   mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/rch_manager?retryWrites=true&w=majority
    ```
 
 ---
@@ -42,7 +42,7 @@ A high-performance, secure backend server for the **RCH Manager** Chrome Extensi
 In terminal / command prompt inside this folder:
 ```bash
 git add .
-git commit -m "Initial commit of Shree RCH Cloud Server"
+git commit -m "Update RCH Manager Cloud Server"
 git branch -M main
 git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/rch-server.git
 git push -u origin main

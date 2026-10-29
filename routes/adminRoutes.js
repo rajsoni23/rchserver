@@ -10,7 +10,7 @@ const Admin = require('../models/Admin');
 const authAdmin = require('../middleware/authAdmin');
 const defaultSelectors = require('../config/defaultSelectors');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'shree-rch-super-secret-jwt-key-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'rch-manager-super-secret-jwt-key-2026';
 
 /**
  * 1. Admin Login
@@ -26,7 +26,7 @@ router.post('/login', async (req, res) => {
 
     // Check env vars first
     const envUser = (process.env.ADMIN_USERNAME || 'admin').toLowerCase().trim();
-    const envPass = process.env.ADMIN_PASSWORD || 'shreeAdmin2026';
+    const envPass = process.env.ADMIN_PASSWORD || 'admin1234';
 
     let isMatch = false;
 

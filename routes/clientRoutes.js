@@ -7,7 +7,7 @@ const Payment = require('../models/Payment');
 const SystemSetting = require('../models/SystemSetting');
 const authUser = require('../middleware/authUser');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'shree-rch-super-secret-jwt-key-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'rch-manager-super-secret-jwt-key-2026';
 
 /**
  * 1. Handshake / Register / Login from Chrome Extension
