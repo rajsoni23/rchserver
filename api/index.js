@@ -20,6 +20,19 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// URL Normalizer for Vercel Serverless routing
+app.use((req, res, next) => {
+  if (req.url.startsWith('/api/index.js')) {
+    const matched = req.headers['x-matched-path'];
+    if (matched) {
+      req.url = matched;
+    } else {
+      req.url = req.url.replace('/api/index.js', '') || '/';
+    }
+  }
+  next();
+});
+
 // Database initialization & auto-seeding
 let isInitialized = false;
 async function initializeDatabase() {
@@ -87,10 +100,11 @@ app.use(async (req, res, next) => {
 
 // API Routes
 app.use('/api/client', clientRoutes);
+app.use('/client', clientRoutes);
 app.use('/api/admin', adminRoutes);
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get(['/api/health', '/health'], (req, res) => {
   res.json({
     status: 'online',
     system: 'Shree RCH Central Engine',
@@ -99,11 +113,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Serve Admin Panel UI
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'));
-});
-
-app.get('/', (req, res) => {
+app.get(['/admin', '/admin.html', '/'], (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'));
 });
 
